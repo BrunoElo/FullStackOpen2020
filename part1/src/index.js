@@ -4,19 +4,28 @@ import ReactDOM from "react-dom";
 const Statistics = (props) => {
   console.log(props);
   const { good, neutral, bad } = props;
-  return (
-    <>
-      <h3>Statistics</h3>
+  if (good + neutral + bad === 0) {
+    return (
       <>
-        <p>good:{good}</p>
-        <p>neutral:{neutral}</p>
-        <p>bad:{bad}</p>
-        <p>total feedback:{good + neutral + bad}</p>
-        <p>average feedback:{(good + neutral + bad) / 3}</p>
-        <p>positive feedback:{(good / (good + neutral + bad)) * 100 || 0}</p>
+        <h3>Statistics</h3>
+        <p>No feedback provided</p>
       </>
-    </>
-  );
+    );
+  } else {
+    return (
+      <>
+        <h3>Statistics</h3>
+        <>
+          <p>good:{good}</p>
+          <p>neutral:{neutral}</p>
+          <p>bad:{bad}</p>
+          <p>total feedback:{good + neutral + bad}</p>
+          <p>average feedback:{(good + neutral + bad) / 3}</p>
+          <p>positive feedback:{(good / (good + neutral + bad)) * 100 || 0}</p>
+        </>
+      </>
+    );
+  }
 };
 
 const App = () => {
