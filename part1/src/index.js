@@ -1,74 +1,38 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-const Statistic = ({ text, value }) => {
+const Button = (prop) => {
+  return <button onClick={prop.handleClick}>{prop.text}</button>;
+};
+
+const App = (props) => {
+  const [selected, setSelected] = useState(0);
+
+  // returns a random integer from min to max (inclusive)
+  const randomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min) + 1) + min;
+  };
+
+  // Wrapper function that calls or returns a function (closures)
+  const changeSelect = (min, max) => {
+    return () => setSelected(randomInt(min, max));
+  };
+
   return (
-    <tr>
-      <td>{text}</td>
-      <td>{value}</td>
-    </tr>
+    <div>
+      <div>{props.anecdotes[selected]}</div>
+      <Button handleClick={changeSelect(0, 5)} text="next anecdote" />
+    </div>
   );
 };
 
-const Statistics = (props) => {
-  console.log(props);
-  const { good, neutral, bad } = props;
-  if (good + neutral + bad === 0) {
-    return (
-      <>
-        <h3>Statistics</h3>
-        <p>No feedback provided</p>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h3>Statistics</h3>
-        <table>
-          <tbody>
-            <Statistic text="good" value={good} />
-            <Statistic text="neutral" value={neutral} />
-            <Statistic text="bad" value={bad} />
-            <Statistic text="Total feedback" value={good + neutral + bad} />
-            <Statistic
-              text="Average feedback"
-              value={(good + neutral + bad) / 3}
-            />
-            <Statistic
-              text="Positive feedback"
-              value={(good / (good + neutral + bad)) * 100 || 0}
-            />
-          </tbody>
-        </table>
-      </>
-    );
-  }
-};
+const anecdotes = [
+  "If it hurts, do it more often",
+  "Adding manpower to a late software project makes it later!",
+  "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
+  "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
+  "Premature optimization is the root of all evil.",
+  "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
+];
 
-const Button = ({ handleClick, text }) => {
-  return <button onClick={handleClick}>{text}</button>;
-};
-
-const App = () => {
-  // corresponding states for each button
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
-
-  // reference function methods to handle events
-  const handleGoodClick = () => setGood(good + 1);
-  const handleNeutralClick = () => setNeutral(neutral + 1);
-  const handleBadClick = () => setBad(bad + 1);
-
-  return (
-    <>
-      <h2>Give Feedback</h2>
-      <Button handleClick={handleGoodClick} text="Good" />
-      <Button handleClick={handleNeutralClick} text="Neutral" />
-      <Button handleClick={handleBadClick} text="Bad" />
-      <Statistics good={good} neutral={neutral} bad={bad} />
-    </>
-  );
-};
-
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<App anecdotes={anecdotes} />, document.getElementById("root"));
