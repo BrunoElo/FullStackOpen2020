@@ -7,6 +7,7 @@ const Button = (prop) => {
 
 const App = (props) => {
   const [selected, setSelected] = useState(0);
+  const [points, setPoints] = useState(new Array(6).fill(0));
 
   // returns a random integer from min to max (inclusive)
   const randomInt = (min, max) => {
@@ -18,10 +19,19 @@ const App = (props) => {
     return () => setSelected(randomInt(min, max));
   };
 
+  const voteCount = () => {
+    const copy = [...points];
+    copy[selected] += 1;
+    return () => setPoints(copy);
+  };
+
   return (
     <div>
+      <h3>Anecdote</h3>
       <div>{props.anecdotes[selected]}</div>
+      <p>Number of votes: {points[selected]}</p>
       <Button handleClick={changeSelect(0, 5)} text="next anecdote" />
+      <Button handleClick={voteCount()} text="vote" />
     </div>
   );
 };
