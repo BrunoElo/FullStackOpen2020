@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Search = ({ searchName, handleSearchNameChange }) => {
   return (
@@ -52,18 +53,19 @@ const Persons = ({ person }) => {
 };
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "09044994499" },
-    { name: "Bell Zalo", number: "09044994498" },
-    { name: "Mylo Drese", number: "09044994439" },
-    { name: "Lasa Feri", number: "09044994429" },
-    { name: "Sara Goli", number: "09044994419" },
-  ]);
+  const [persons, setPersons] = useState([]);
 
-  const [searchList] = useState(persons);
+  const [searchList, setSearchList] = useState(persons);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchName, setSearchName] = useState("");
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      setPersons(response.data);
+      setSearchList(response.data);
+    });
+  }, []);
 
   const addName = (event) => {
     event.preventDefault();
@@ -89,6 +91,7 @@ const App = () => {
     const result = searchList.filter((person) =>
       person.name.toLowerCase().includes(event.target.value.toLowerCase())
     );
+    console.log(result);
     setPersons(result);
   };
 
