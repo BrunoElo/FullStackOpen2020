@@ -10,38 +10,36 @@ const Search = ({ searchName, handleSearchNameChange }) => {
   );
 };
 
-const Form = (props) => {
-  const {
-    newName,
-    newNumber,
-    handleNameChange,
-    handleNumberChange,
-    addName,
-  } = props;
-  return (
-    <form>
-      <div>
-        name: <input value={newName} onChange={handleNameChange} />
-        <br />
-        number: <input value={newNumber} onChange={handleNumberChange} />
-      </div>
-      <div>
-        <button type="submit" onClick={addName}>
-          add
-        </button>
-      </div>
-    </form>
-  );
-};
-
 const List = ({ persons }) => {
-  return (
-    <ul>
-      {persons.map((person) => (
-        <Persons key={person.name} person={person} />
-      ))}
-    </ul>
-  );
+  if (persons.length > 10) {
+    return <p>Too many matches, specify another filter</p>;
+  } else if (persons.length > 1 && persons.length <= 10) {
+    return (
+      <ul>
+        {persons.map((person) => (
+          <Persons key={person.name} person={person} />
+        ))}
+      </ul>
+    );
+  } else if (persons.length === 1) {
+    return (
+      <div>
+        <h1>{persons[0].name}</h1>
+        <p>Capital: {persons[0].capital}</p>
+        <p>Population: {persons[0].population}</p>
+        <h3>Languages</h3>
+        <ul>
+          {persons[0].languages.map((lang) => (
+            <li key={lang.iso639_1}>{lang.name}</li>
+          ))}
+        </ul>
+        <h2>Flag</h2>
+        <img width="100px" src={persons[0].flag} alt="flag"></img>
+      </div>
+    );
+  } else {
+    return null;
+  }
 };
 
 const Persons = ({ person }) => {
@@ -55,42 +53,23 @@ const Persons = ({ person }) => {
 const App = () => {
   const [persons, setPersons] = useState([]);
 
-  const [searchList, setSearchList] = useState(persons);
-  const [newName, setNewName] = useState("");
-  const [newNumber, setNewNumber] = useState("");
+  const [searchList, setSearchList] = useState([]);
   const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+    axios.get("https://restcountries.eu/rest/v2/all").then((response) => {
       setSearchList(response.data);
     });
   }, []);
 
-  const addName = (event) => {
-    event.preventDefault();
-    if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already in phonebook`);
-    } else {
-      setPersons(persons.concat({ name: newName, number: newNumber }));
-    }
-    setNewName("");
-    setNewNumber("");
-  };
-
-  const handleNameChange = (event) => {
-    setNewName(event.target.value);
-  };
-
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value);
-  };
-
   const handleSearchNameChange = (event) => {
     setSearchName(event.target.value);
-    const result = searchList.filter((person) =>
+    let result = searchList.filter((person) =>
       person.name.toLowerCase().includes(event.target.value.toLowerCase())
     );
+    if (!event.target.value) {
+      result = [];
+    }
     console.log(result);
     setPersons(result);
   };
@@ -101,15 +80,7 @@ const App = () => {
         searchName={searchName}
         handleSearchNameChange={handleSearchNameChange}
       />
-      <h2>Phonebook</h2>
-      <Form
-        newName={newName}
-        newNumber={newNumber}
-        addName={addName}
-        handleNameChange={handleNameChange}
-        handleNumberChange={handleNumberChange}
-      />
-      <h2>Numbers</h2>
+      <h2>Result</h2>
       <List persons={persons} />
     </div>
   );
