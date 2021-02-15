@@ -10,8 +10,36 @@ const Search = ({ searchName, handleSearchNameChange }) => {
   );
 };
 
+const Weather = ({ weather }) => {
+  console.log(weather);
+  return (
+    <div>
+      <h3>Weather in {weather.name}</h3>
+      <h5>Temperature: {weather.main.temp}K</h5>
+      <h5>Weather Description: {weather.weather[0].description}</h5>
+      <img
+        src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+        alt="weather"
+      ></img>
+      <h5>Wind speed: {weather.wind.speed}m/s</h5>
+    </div>
+  );
+};
+
 // Renders the country data
 const Views = ({ persons }) => {
+  const [weather, setWeather] = useState("");
+  useEffect(() => {
+    const apiKey = process.env.REACT_APP_API_KEY;
+    const cityName = persons[0].capital;
+    axios
+      .get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`
+      )
+      .then((response) => {
+        setWeather(response.data);
+      });
+  }, [persons]);
   if (persons[0] === "") {
     return null;
   } else {
@@ -28,6 +56,7 @@ const Views = ({ persons }) => {
         </ul>
         <h2>Flag</h2>
         <img width="100px" src={persons[0].flag} alt="flag"></img>
+        {weather && <Weather weather={weather} />}
       </div>
     );
   }
@@ -55,14 +84,20 @@ const List = ({ persons }) => {
 // Renders individual result in list
 const Persons = ({ person }) => {
   const [show, setShow] = useState(false);
+  const [btn, setBtn] = useState("show");
   const showInfo = () => {
     setShow(!show);
+    if (show) {
+      setBtn("show");
+    } else {
+      setBtn("hide");
+    }
   };
   return (
     <div>
       <li>{person.name}</li>
       <button onClick={showInfo} value={person}>
-        show
+        {btn}
       </button>
       {show && <Views persons={[person]} />}
     </div>
@@ -89,6 +124,7 @@ const App = () => {
     if (!event.target.value) {
       result = [];
     }
+    console.log(result);
     setPersons(result);
   };
 
