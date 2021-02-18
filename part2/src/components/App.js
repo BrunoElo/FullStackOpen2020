@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiService from "../services/api-service";
 
 const Search = ({ searchName, handleSearchNameChange }) => {
   return (
@@ -10,120 +10,92 @@ const Search = ({ searchName, handleSearchNameChange }) => {
   );
 };
 
-const Weather = ({ weather }) => {
-  console.log(weather);
+const Form = (props) => {
+  const {
+    newName,
+    newNumber,
+    handleNameChange,
+    handleNumberChange,
+    addName,
+  } = props;
   return (
-    <div>
-      <h3>Weather in {weather.name}</h3>
-      <h5>Temperature: {weather.main.temp}K</h5>
-      <h5>Weather Description: {weather.weather[0].description}</h5>
-      <img
-        src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
-        alt="weather"
-      ></img>
-      <h5>Wind speed: {weather.wind.speed}m/s</h5>
-    </div>
+    <form>
+      <div>
+        name: <input value={newName} onChange={handleNameChange} />
+        <br />
+        number: <input value={newNumber} onChange={handleNumberChange} />
+      </div>
+      <div>
+        <button type="submit" onClick={addName}>
+          add
+        </button>
+      </div>
+    </form>
   );
 };
 
-// Renders the country data
-const Views = ({ persons }) => {
-  const [weather, setWeather] = useState("");
-  useEffect(() => {
-    const apiKey = process.env.REACT_APP_API_KEY;
-    const cityName = persons[0].capital;
-    axios
-      .get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`
-      )
-      .then((response) => {
-        setWeather(response.data);
-      });
-  }, [persons]);
-  if (persons[0] === "") {
-    return null;
-  } else {
-    return (
-      <div>
-        <h1>{persons[0].name}</h1>
-        <p>Capital: {persons[0].capital}</p>
-        <p>Population: {persons[0].population}</p>
-        <h3>Languages</h3>
-        <ul>
-          {persons[0].languages.map((lang) => (
-            <li key={lang.iso639_1}>{lang.name}</li>
-          ))}
-        </ul>
-        <h2>Flag</h2>
-        <img width="100px" src={persons[0].flag} alt="flag"></img>
-        {weather && <Weather weather={weather} />}
-      </div>
-    );
-  }
-};
-
-// Renders result list from search
 const List = ({ persons }) => {
-  if (persons.length > 10) {
-    return <p>Too many matches, specify another filter</p>;
-  } else if (persons.length > 1 && persons.length <= 10) {
-    return (
-      <ul>
-        {persons.map((person) => (
-          <Persons key={person.name} person={person} />
-        ))}
-      </ul>
-    );
-  } else if (persons.length === 1) {
-    return <Views persons={persons} />;
-  } else {
-    return null;
-  }
+  return (
+    <ul>
+      {persons.map((person) => (
+        <Persons key={person.name} person={person} />
+      ))}
+    </ul>
+  );
 };
 
-// Renders individual result in list
 const Persons = ({ person }) => {
-  const [show, setShow] = useState(false);
-  const [btn, setBtn] = useState("show");
-  const showInfo = () => {
-    setShow(!show);
-    if (show) {
-      setBtn("show");
-    } else {
-      setBtn("hide");
-    }
-  };
   return (
-    <div>
-      <li>{person.name}</li>
-      <button onClick={showInfo} value={person}>
-        {btn}
-      </button>
-      {show && <Views persons={[person]} />}
-    </div>
+    <li>
+      {person.name} {person.number}
+    </li>
   );
 };
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [searchList, setSearchList] = useState([]);
+
+  const [searchList, setSearchList] = useState(persons);
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
   const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
-    axios.get("https://restcountries.eu/rest/v2/all").then((response) => {
-      setSearchList(response.data);
+    apiService.getAll().then((response) => {
+      setPersons(response);
+      setSearchList(response);
     });
   }, []);
 
+  const addName = (event) => {
+    event.preventDefault();
+    if (persons.some((person) => person.name === newName)) {
+      alert(`${newName} is already in phonebook`);
+    } else {
+      const payload = { name: newName, number: newNumber };
+
+      apiService.create(payload).then((response) => {
+        console.log(response);
+        setPersons(persons.concat(response));
+      });
+    }
+    setNewName("");
+    setNewNumber("");
+  };
+
+  const handleNameChange = (event) => {
+    setNewName(event.target.value);
+  };
+
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value);
+  };
+
   const handleSearchNameChange = (event) => {
     setSearchName(event.target.value);
-    let result = searchList.filter((person) =>
+    const result = searchList.filter((person) =>
       person.name.toLowerCase().includes(event.target.value.toLowerCase())
     );
-    // if the input is empty
-    if (!event.target.value) {
-      result = [];
-    }
     console.log(result);
     setPersons(result);
   };
@@ -134,7 +106,15 @@ const App = () => {
         searchName={searchName}
         handleSearchNameChange={handleSearchNameChange}
       />
-      <h2>Result</h2>
+      <h2>Phonebook</h2>
+      <Form
+        newName={newName}
+        newNumber={newNumber}
+        addName={addName}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+      />
+      <h2>Numbers</h2>
       <List persons={persons} />
     </div>
   );
