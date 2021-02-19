@@ -34,20 +34,37 @@ const Form = (props) => {
   );
 };
 
-const List = ({ persons }) => {
+const List = ({ persons, setPersons }) => {
   return (
     <ul>
       {persons.map((person) => (
-        <Persons key={person.name} person={person} />
+        <Persons
+          persons={persons}
+          key={person.name}
+          person={person}
+          setPersons={setPersons}
+        />
       ))}
     </ul>
   );
 };
 
-const Persons = ({ person }) => {
+const Persons = ({ person, setPersons, persons }) => {
+  const remove = (id, name) => () => {
+    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
+      apiService.deleteItem(id).then((response) => {
+        if (response.status === 200) {
+          const newPersons = persons.filter((person) => person.id !== id);
+          setPersons(newPersons);
+        }
+      });
+    }
+  };
+
   return (
     <li>
-      {person.name} {person.number}
+      {person.name} {person.number}{" "}
+      <button onClick={remove(person.id, person.name)}>Delete</button>
     </li>
   );
 };
@@ -115,7 +132,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <List persons={persons} />
+      <List persons={persons} setPersons={setPersons} />
     </div>
   );
 };

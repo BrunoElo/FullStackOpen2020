@@ -9,9 +9,14 @@ const create = (payload) => {
   return axios.post(baseUrl, payload).then((response) => response.data);
 };
 
+const deleteItem = (id) => {
+  return axios.delete(`${baseUrl}/${id}`);
+};
+
 const apiService = {
   getAll,
   create,
+  deleteItem,
 };
 
 export default apiService;
