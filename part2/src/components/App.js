@@ -86,13 +86,35 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault();
-    if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already in phonebook`);
-    } else {
-      const payload = { name: newName, number: newNumber };
+    const payload = { name: newName, number: newNumber };
 
+    if (persons.some((person) => person.name === newName)) {
+      //alert(`${newName} is already in phonebook`);
+      const entry = persons.find(({ name }) => name === newName);
+
+      if (
+        window.confirm(
+          `${newName} is already in phonebook, do you want to replace the number?`
+        )
+      ) {
+        apiService
+          .update(entry.id, payload)
+          .then((response) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== entry.id ? person : response.data
+              )
+            );
+          })
+          .catch((error) => {
+            alert(
+              `Sorry, ${entry.name} may have been deleted from the database`
+            );
+            setPersons(persons.filter((person) => person.id !== entry.id));
+          });
+      }
+    } else {
       apiService.create(payload).then((response) => {
-        console.log(response);
         setPersons(persons.concat(response));
       });
     }
@@ -113,7 +135,6 @@ const App = () => {
     const result = searchList.filter((person) =>
       person.name.toLowerCase().includes(event.target.value.toLowerCase())
     );
-    console.log(result);
     setPersons(result);
   };
 

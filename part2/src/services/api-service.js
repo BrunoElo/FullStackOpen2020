@@ -13,10 +13,15 @@ const deleteItem = (id) => {
   return axios.delete(`${baseUrl}/${id}`);
 };
 
+const update = (id, payload) => {
+  return axios.put(`${baseUrl}/${id}`, payload);
+};
+
 const apiService = {
   getAll,
   create,
   deleteItem,
+  update,
 };
 
 export default apiService;
