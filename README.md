@@ -17,6 +17,12 @@ Working repository for the FullStackOpen course for cohort 2020 by etki_JS
 - [unicafe](part1/unicafe)
 - [anecdotes](part1/anecdotes)
 
+[Part2](part2)
+
+- [courseinfo](part2/courseinfo)
+- [dataforcountries](part2/dataforcountries)
+- [thephonebook](part2/thephonebook)
+
 Useful Reading
 
 - [React Official Documentation](https://reactjs.org/docs/hello-world.html)

@@ -7,8 +7,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 Each exercise section have been categorised into folders namely;
 
 - courseinfo
-- unicafe
-- anecdotes
+- dataforcountries
+- thephonebook
 
 ## Accessing each exercise
 
