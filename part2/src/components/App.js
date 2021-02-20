@@ -34,30 +34,41 @@ const Form = (props) => {
   );
 };
 
-const List = ({ persons, setPersons }) => {
+const List = ({ persons, setPersons, setNotify }) => {
+  console.log(persons);
   return (
     <ul>
-      {persons.map((person) => (
-        <Persons
-          persons={persons}
-          key={person.name}
-          person={person}
-          setPersons={setPersons}
-        />
-      ))}
+      {persons.map((person) => {
+        return (
+          <Persons
+            persons={persons}
+            key={person.id}
+            person={person}
+            setPersons={setPersons}
+            setNotify={setNotify}
+          />
+        );
+      })}
     </ul>
   );
 };
 
-const Persons = ({ person, setPersons, persons }) => {
+const Persons = ({ person, setPersons, persons, setNotify }) => {
   const remove = (id, name) => () => {
     if (window.confirm(`Are you sure you want to delete ${name}?`)) {
-      apiService.deleteItem(id).then((response) => {
-        if (response.status === 200) {
+      apiService
+        .deleteItem(id)
+        .then((response) => {
           const newPersons = persons.filter((person) => person.id !== id);
           setPersons(newPersons);
-        }
-      });
+          setNotify(`${name} successfully deleted`);
+          setTimeout(() => setNotify(null), 4000);
+        })
+        .catch((error) => {
+          setNotify(`Sorry, ${name} may have been deleted from the database`);
+          setTimeout(() => setNotify(null), 4000);
+          setPersons(persons.filter((person) => person.id !== id));
+        });
     }
   };
 
@@ -69,6 +80,23 @@ const Persons = ({ person, setPersons, persons }) => {
   );
 };
 
+const Notification = ({ notify }) => {
+  if (!notify) {
+    return null;
+  } else if (notify.includes("Sorry")) {
+    return (
+      <div className="error-notification">
+        <p>{notify}</p>
+      </div>
+    );
+  }
+  return (
+    <div className="success-notification">
+      <p>{notify}</p>
+    </div>
+  );
+};
+
 const App = () => {
   const [persons, setPersons] = useState([]);
 
@@ -76,6 +104,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchName, setSearchName] = useState("");
+  const [notify, setNotify] = useState("");
 
   useEffect(() => {
     apiService.getAll().then((response) => {
@@ -105,17 +134,25 @@ const App = () => {
                 person.id !== entry.id ? person : response.data
               )
             );
+            setNotify(`${newName} successfully updated`);
+            setTimeout(() => setNotify(null), 4000);
           })
           .catch((error) => {
-            alert(
+            /*  alert(
+              `Sorry, ${entry.name} may have been deleted from the database`
+            ); */
+            setNotify(
               `Sorry, ${entry.name} may have been deleted from the database`
             );
+            setTimeout(() => setNotify(null), 4000);
             setPersons(persons.filter((person) => person.id !== entry.id));
           });
       }
     } else {
       apiService.create(payload).then((response) => {
         setPersons(persons.concat(response));
+        setNotify(`${newName} successfully added`);
+        setTimeout(() => setNotify(null), 5000);
       });
     }
     setNewName("");
@@ -140,6 +177,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification notify={notify} />
       <Search
         searchName={searchName}
         handleSearchNameChange={handleSearchNameChange}
@@ -153,7 +191,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <List persons={persons} setPersons={setPersons} />
+      <List persons={persons} setPersons={setPersons} setNotify={setNotify} />
     </div>
   );
 };
