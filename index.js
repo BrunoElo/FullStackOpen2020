@@ -1,10 +1,18 @@
 const express = require("express");
 const app = express();
+const morgan = require("morgan");
+
 app.use(express.json());
 
 // Middleware
-let morgan = require("morgan");
-app.use(morgan("tiny"));
+morgan.token("reqBody", (request, response) => {
+  return `{"name":"${request.body.name}", "number":"${request.body.number}"}`;
+});
+morgan.format(
+  "tinyExt",
+  ":method :url :status :res[content-length] - :response-time ms :reqBody"
+);
+app.use(morgan("tinyExt"));
 
 let persons = [
   {
