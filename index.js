@@ -2,6 +2,10 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
+// Middleware
+let morgan = require("morgan");
+app.use(morgan("tiny"));
+
 let persons = [
   {
     name: "Arto Hellas",
@@ -79,6 +83,7 @@ app.post("/api/persons", (request, response) => {
   response.json(person);
 });
 
+// Random id generator
 const genrateId = () => {
   return Math.floor(Math.random() * 1000) + 1;
 };
