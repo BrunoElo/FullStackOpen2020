@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const cors = require("cors");
 
 app.use(express.json());
 
@@ -13,6 +14,7 @@ morgan.format(
   ":method :url :status :res[content-length] - :response-time ms :reqBody"
 );
 app.use(morgan("tinyExt"));
+app.use(cors());
 
 let persons = [
   {
@@ -96,7 +98,7 @@ const genrateId = () => {
   return Math.floor(Math.random() * 1000) + 1;
 };
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
