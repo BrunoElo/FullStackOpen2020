@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const Person = require("./models/person");
 
+app.use(express.static("build"));
 app.use(express.json());
 
 // Middleware
@@ -17,7 +18,14 @@ morgan.format(
 );
 app.use(morgan("tinyExt"));
 app.use(cors());
-app.use(express.static("build"));
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+  next(error);
+};
 
 let persons = [
   {
@@ -54,21 +62,34 @@ app.get("/api/persons", (request, response) => {
   });
 });
 
-// Get info
+// Get database info
 app.get("/info", (request, response) => {
-  let length = persons.length;
-  let currentDate = new Date();
-  response.send(
-    `<p>Phonebook has info for ${length} people</p><br>${currentDate}`
-  );
+  Person.count({}).then((count) => {
+    let length = count;
+    let currentDate = new Date();
+    response.send(
+      `<p>Phonebook has info for ${length} people</p><br>${currentDate}`
+    );
+  });
 });
 
 // Get a particular item by id
-app.get("/api/persons/:id", (request, response) => {
-  const id = +request.params.id;
-  Person.findById(id).then((person) => {
-    response.json(person);
-  });
+app.get("/api/persons/:id", (request, response, next) => {
+  //const id = +request.params.id;
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => {
+      next(error);
+      /* console.log(error);
+      response.status(400).send({ error: "malformatted id" });
+     */
+    });
 
   /* const person = persons.find((person) => person.id === id);
   if (person) {
@@ -79,10 +100,30 @@ app.get("/api/persons/:id", (request, response) => {
 });
 
 // Delete a particula item by id
-app.delete("/api/persons/:id", (request, response) => {
-  const id = +request.params.id;
-  persons = persons.filter((person) => person.id !== id);
-  response.status(204).end();
+app.delete("/api/persons/:id", (request, response, next) => {
+  //const id = +request.params.id;
+  Person.findByIdAndRemove(request.params.id)
+    .then((result) => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
+  /* persons = persons.filter((person) => person.id !== id);
+  response.status(204).end(); */
+});
+
+// Update an item
+app.put("/api/persons/:id", (request, response, next) => {
+  const body = request.body;
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      response.json(updatedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 // Create a new item
@@ -116,6 +157,8 @@ app.post("/api/persons", (request, response) => {
 const genrateId = () => {
   return Math.floor(Math.random() * 1000) + 1;
 };
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
