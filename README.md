@@ -23,6 +23,11 @@ Working repository for the FullStackOpen course for cohort 2020 by etki_JS
 - [dataforcountries](part2/dataforcountries)
 - [thephonebook](part2/thephonebook)
 
+[Part3](https://github.com/BrunoElo/FullStackOpen2020/tree/part3)
+
+- [thephonebookfullstack (same repo)](https://github.com/BrunoElo/FullStackOpen2020/tree/part3)
+- [thephonebookfullstack (separate repo)](https://github.com/BrunoElo/FullStackOpen-Part3)
+
 Useful Reading
 
 - [React Official Documentation](https://reactjs.org/docs/hello-world.html)
