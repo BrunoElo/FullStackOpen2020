@@ -1,7 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
+const Person = require("./models/person");
 
 app.use(express.json());
 
@@ -40,14 +42,19 @@ let persons = [
   },
 ];
 
+// Get home page
 app.get("/", (request, response) => {
   response.send("<h1>devs</h1>");
 });
 
+// Get all items
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Person.find({}).then((persons) => {
+    response.json(persons);
+  });
 });
 
+// Get info
 app.get("/info", (request, response) => {
   let length = persons.length;
   let currentDate = new Date();
@@ -56,22 +63,29 @@ app.get("/info", (request, response) => {
   );
 });
 
+// Get a particular item by id
 app.get("/api/persons/:id", (request, response) => {
   const id = +request.params.id;
-  const person = persons.find((person) => person.id === id);
+  Person.findById(id).then((person) => {
+    response.json(person);
+  });
+
+  /* const person = persons.find((person) => person.id === id);
   if (person) {
     response.json(person);
   } else {
     response.status(404).end();
-  }
+  } */
 });
 
+// Delete a particula item by id
 app.delete("/api/persons/:id", (request, response) => {
   const id = +request.params.id;
   persons = persons.filter((person) => person.id !== id);
   response.status(204).end();
 });
 
+// Create a new item
 app.post("/api/persons", (request, response) => {
   const body = request.body;
   if (!body.name || !body.number) {
@@ -84,14 +98,18 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
     id: genrateId(),
-  };
+  });
 
-  persons = persons.concat(person);
-  response.json(person);
+  person.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
+
+  /* persons = persons.concat(person);
+  response.json(person); */
 });
 
 // Random id generator
@@ -99,7 +117,7 @@ const genrateId = () => {
   return Math.floor(Math.random() * 1000) + 1;
 };
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
