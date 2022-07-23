@@ -32,6 +32,12 @@ Working repository for the FullStackOpen course for cohort 2020 by etki_JS
 
 - [bloglist](https://github.com/BrunoElo/FullStackOpen2020/tree/part4)
 
+[Part5](https://github.com/BrunoElo/FullStackOpen2020/tree/part5)
+
+- [bloglist frontend](https://github.com/BrunoElo/FullStackOpen2020/tree/part5)
+- [blog list tests](https://github.com/BrunoElo/FullStackOpen2020/tree/part5/tests)
+- [bloglist end to end testing](https://github.com/BrunoElo/FullStackOpen2020/tree/part5/bloglist-frontend/cypress)
+
 Useful Reading
 
 - [React Official Documentation](https://reactjs.org/docs/hello-world.html)
