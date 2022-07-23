@@ -7,7 +7,6 @@ import { store } from "./store";
 // import reducer from './reducers/anecdoteReducer'
 
 // const store = createStore(reducer)
-console.log(store.getState());
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <App />
