@@ -34,6 +34,9 @@ const reducer = (state = initialState, action) => {
         anecdote.id !== id ? anecdote : votedAnecdote
       );
       return newAnecdotes;
+    case "CREATE":
+      const newAnecdote = asObject(action.data.content);
+      return [...state, newAnecdote];
     default:
       return state;
   }
