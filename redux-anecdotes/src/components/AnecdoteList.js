@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { voteAnecdote } from "../reducers/anecdoteReducer";
+import { handleAnecdoteVote, voteAnecdote } from "../reducers/anecdoteReducer";
 import {
   removeNotification,
   setNotification,
@@ -24,9 +24,9 @@ const AnecdoteList = () => {
     }, 5000);
   };
 
-  const vote = (id) => {
-    dispatch(voteAnecdote(id));
-    handleNotification({ data: id, type: "vote" });
+  const vote = (anecdote) => {
+    dispatch(handleAnecdoteVote(anecdote));
+    // handleNotification({ data: id, type: "vote" });
   };
 
   return (
@@ -36,7 +36,7 @@ const AnecdoteList = () => {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote)}>vote</button>
           </div>
         </div>
       ))}
