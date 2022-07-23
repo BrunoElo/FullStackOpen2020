@@ -1,4 +1,5 @@
 import anecdoteService from "../services/anecdotes";
+import { setNotification } from "./notificationReducer";
 
 const reducer = (state = [], action) => {
   switch (action.type) {
@@ -55,6 +56,7 @@ export const newAnecdote = (content) => {
   return async (dispatch) => {
     const newAnecdote = await anecdoteService.createAnecdote(content);
     dispatch(createAnecdote(newAnecdote));
+    dispatch(setNotification(`you created '${newAnecdote.content}'`, 10));
   };
 };
 
