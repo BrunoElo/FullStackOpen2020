@@ -5,6 +5,7 @@ import {
   removeNotification,
   setNotification,
 } from "../reducers/notificationReducer";
+import anecdoteService from "../services/anecdotes";
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
@@ -16,12 +17,13 @@ const AnecdoteForm = () => {
     }, 5000);
   };
 
-  const create = (event) => {
+  const create = async (event) => {
     event.preventDefault();
     const anecdote = event.target.anecdote.value;
-    dispatch(createAnecdote(anecdote));
     event.target.anecdote.value = "";
-    handleNotification({ data: anecdote, type: "create" });
+    const newAnecdote = await anecdoteService.createAnecdote(anecdote);
+    dispatch(createAnecdote(newAnecdote));
+    handleNotification({ data: newAnecdote, type: "create" });
   };
 
   return (
