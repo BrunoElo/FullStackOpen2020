@@ -38,6 +38,11 @@ Working repository for the FullStackOpen course for cohort 2020 by etki_JS
 - [blog list tests](https://github.com/BrunoElo/FullStackOpen2020/tree/part5/tests)
 - [bloglist end to end testing](https://github.com/BrunoElo/FullStackOpen2020/tree/part5/bloglist-frontend/cypress)
 
+[Part6](https://github.com/BrunoElo/FullStackOpen2020/tree/part6)
+
+- [unicafe-redux](https://github.com/BrunoElo/FullStackOpen2020/tree/part6/unicafe-redux)
+- [redux-anecdotes](https://github.com/BrunoElo/FullStackOpen2020/tree/part6/redux-anecdotes)
+
 Useful Reading
 
 - [React Official Documentation](https://reactjs.org/docs/hello-world.html)
