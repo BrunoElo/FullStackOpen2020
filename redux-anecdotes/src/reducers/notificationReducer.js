@@ -19,7 +19,7 @@ export const { addNotification, removeNotification } =
 let notificationTimeout = 0;
 
 export const setNotification = (message, duration) => {
-  clearTimeout(notificationTimeout);
+  clearTimeout(notificationTimeout); 
   return (dispatch) => {
     dispatch(addNotification(message));
     notificationTimeout = setTimeout(() => {
