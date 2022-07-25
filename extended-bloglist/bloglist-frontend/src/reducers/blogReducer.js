@@ -14,10 +14,22 @@ const blogSlice = createSlice({
       console.log(current(state), action);
       return [...state, action.payload];
     },
+    updateBlog(state, action) {
+      const updatedBlog = action.payload;
+      const newBlogs = state.map((blog) =>
+        blog.id !== updatedBlog.id ? blog : updatedBlog
+      );
+      return newBlogs;
+    },
+    deleteBlog(state, action) {
+      const deletedBlogId = action.payload;
+      const remainingBlogs = state.filter((blog) => blog.id !== deletedBlogId);
+      return remainingBlogs;
+    },
   },
 });
 
-export const { setBlogs, newBlog } = blogSlice.actions;
+export const { setBlogs, newBlog, updateBlog, deleteBlog } = blogSlice.actions;
 
 export const initializeBlogs = () => {
   return async (dispatch) => {
@@ -36,6 +48,38 @@ export const createBlog = (blog) => {
       dispatch(createNotification("Error in adding blog post", 5, "error"));
     }
   };
+};
+
+export const likeBlog = (blog) => {
+  const likedBlog = {
+    likes: +blog.likes + 1,
+    author: blog.author,
+    title: blog.title,
+    url: blog.url,
+  };
+  return async (dispatch) => {
+    const response = await blogService.update(likedBlog, blog.id);
+    console.log(response);
+    dispatch(updateBlog(response));
+  };
+};
+
+export const removeBlog = (id) => {
+  try {
+    return async (dispatch) => {
+      await blogService.remove(id);
+      dispatch(deleteBlog(id));
+      dispatch(createNotification("Blog post deleted successfully", 5));
+    };
+  } catch (err) {
+    dispatch(
+      createNotification(
+        "Error!, can't delete a blog you didn't create",
+        5,
+        "error"
+      )
+    );
+  }
 };
 
 export default blogSlice.reducer;

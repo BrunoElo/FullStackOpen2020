@@ -47,7 +47,7 @@ const App = () => {
         setUsername("");
         setPassword("");
         window.localStorage.setItem("userDetails", JSON.stringify(data));
-        dispatch(createNotification("Login successful", 5, "error"));
+        dispatch(createNotification("Login successful", 5));
       })
       .catch(() =>
         dispatch(createNotification("Wrong username or password", 5, "error"))
