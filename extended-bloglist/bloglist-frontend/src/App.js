@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
 import NewBlogForm from "./components/NewBlogForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
+import { createNotification } from "./reducers/notificationReducer";
 import { blogService } from "./services/blogs";
 
 const App = () => {
+  const dispatch = useDispatch();
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -36,9 +38,11 @@ const App = () => {
         blogFormRef.current.toggleVisibility();
         console.log(data);
         setBlogs(blogs.concat(data));
-        handleNotification("blog post succesfully added");
+        dispatch(createNotification("blog post succesfully added", 5));
       })
-      .catch(() => handleNotification("Error in adding blog post"));
+      .catch(() =>
+        dispatch(createNotification("Error in adding blog post", 5, "error"))
+      );
   };
 
   const handleLogin = (event) => {
@@ -51,22 +55,17 @@ const App = () => {
         setUsername("");
         setPassword("");
         window.localStorage.setItem("userDetails", JSON.stringify(data));
-        handleNotification("Login successful");
+        dispatch(createNotification("Login successful", 5, "error"));
       })
-      .catch(() => handleNotification("Wrong username or password", "error"));
+      .catch(() =>
+        dispatch(createNotification("Wrong username or password", 5, "error"))
+      );
   };
 
   const handleLogout = () => {
     blogService.logout();
     setUser(null);
-    handleNotification("Successfully logged out");
-  };
-
-  const handleNotification = (message, type = "success") => {
-    setNotification({ message, type });
-    setTimeout(() => {
-      setNotification(null);
-    }, 4000);
+    dispatch(createNotification("Successfully logged out", 5));
   };
 
   const handleLike = (updatedBlog, blogId) => {
@@ -92,7 +91,7 @@ const App = () => {
   if (user === null) {
     return (
       <>
-        <Notification notification={notification} />
+        <Notification />
         <LoginForm
           handleLogin={handleLogin}
           username={username}
@@ -105,7 +104,7 @@ const App = () => {
   } else {
     return (
       <>
-        <Notification notification={notification} />
+        <Notification />
         <h2>blogs</h2>
         <span>{user.username} is logged in.</span>
         <button id="logout-button" onClick={handleLogout}>
@@ -129,7 +128,6 @@ const App = () => {
             blog={blog}
             blogs={blogs}
             setBlogs={setBlogs}
-            handleNotification={handleNotification}
           />
         ))}
       </>

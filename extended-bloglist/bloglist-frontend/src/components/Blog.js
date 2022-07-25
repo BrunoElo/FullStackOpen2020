@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createNotification } from "../reducers/notificationReducer";
 import { blogService } from "../services/blogs";
 
-const Blog = ({ updateLike, blog, blogs, setBlogs, handleNotification }) => {
+const Blog = ({ updateLike, blog, blogs, setBlogs }) => {
+  const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
 
   const blogStyle = {
@@ -31,13 +34,16 @@ const Blog = ({ updateLike, blog, blogs, setBlogs, handleNotification }) => {
       blogService
         .remove(blog.id)
         .then(() => {
-          handleNotification("Blog post deleted successfully");
+          dispatch(createNotification("Blog post deleted successfully", 5));
           setBlogs(blogs.filter((otherBlog) => otherBlog.id !== blog.id));
         })
         .catch(() =>
-          handleNotification(
-            "Error!, can't delete a blog you didn't create",
-            "error"
+          dispatch(
+            createNotification(
+              "Error!, can't delete a blog you didn't create",
+              5,
+              "error"
+            )
           )
         );
     }
