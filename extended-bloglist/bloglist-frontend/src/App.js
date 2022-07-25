@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
 import NewBlogForm from "./components/NewBlogForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
+import { createBlog, initializeBlogs } from "./reducers/blogReducer";
 import { createNotification } from "./reducers/notificationReducer";
 import { blogService } from "./services/blogs";
 
 const App = () => {
   const dispatch = useDispatch();
+  const storeBlogs = useSelector((state) => state.blogs);
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
@@ -26,23 +28,13 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   const blogFormRef = useRef();
 
   const handleAddBlog = (newBlog) => {
-    blogService
-      .create(newBlog)
-      .then((data) => {
-        blogFormRef.current.toggleVisibility();
-        console.log(data);
-        setBlogs(blogs.concat(data));
-        dispatch(createNotification("blog post succesfully added", 5));
-      })
-      .catch(() =>
-        dispatch(createNotification("Error in adding blog post", 5, "error"))
-      );
+    dispatch(createBlog(newBlog));
   };
 
   const handleLogin = (event) => {
@@ -121,7 +113,7 @@ const App = () => {
         <button onClick={handleSortAsc}>sort by likes low to high</button>
         <button onClick={handleSortDesc}>sort by likes high to low</button>
         <br />
-        {blogs.map((blog) => (
+        {storeBlogs.map((blog) => (
           <Blog
             updateLike={handleLike}
             key={blog.id}
