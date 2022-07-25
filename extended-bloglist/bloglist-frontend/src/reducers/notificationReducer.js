@@ -11,11 +11,14 @@ const notificationSlice = createSlice({
 });
 
 export const { setNotification } = notificationSlice.actions;
-
+let timeoutId = null;
 export const createNotification = (message, duration, type = "success") => {
   return async (dispatch) => {
     dispatch(setNotification({ message, type }));
-    setTimeout(() => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
       dispatch(setNotification(null));
     }, duration * 1000);
   };

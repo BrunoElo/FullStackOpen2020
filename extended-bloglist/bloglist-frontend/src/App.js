@@ -6,14 +6,14 @@ import NewBlogForm from "./components/NewBlogForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import { createBlog, initializeBlogs } from "./reducers/blogReducer";
-import { createNotification } from "./reducers/notificationReducer";
+import { loginUser, logoutUser } from "./reducers/userReducer";
 import { blogService } from "./services/blogs";
 
 const App = () => {
   const dispatch = useDispatch();
   const storeBlogs = useSelector((state) => state.blogs);
   const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.user);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -22,7 +22,6 @@ const App = () => {
     const loggedInUser = window.localStorage.getItem("userDetails");
     if (loggedInUser) {
       const user = JSON.parse(loggedInUser);
-      setUser(user);
       blogService.setToken(user.token);
     }
   }, []);
@@ -39,34 +38,11 @@ const App = () => {
 
   const handleLogin = (event) => {
     event.preventDefault();
-    blogService
-      .login({ username, password })
-      .then((data) => {
-        setUser(data);
-        blogService.setToken(data.token);
-        setUsername("");
-        setPassword("");
-        window.localStorage.setItem("userDetails", JSON.stringify(data));
-        dispatch(createNotification("Login successful", 5));
-      })
-      .catch(() =>
-        dispatch(createNotification("Wrong username or password", 5, "error"))
-      );
+    dispatch(loginUser({ username, password }));
   };
 
   const handleLogout = () => {
-    blogService.logout();
-    setUser(null);
-    dispatch(createNotification("Successfully logged out", 5));
-  };
-
-  const handleLike = (updatedBlog, blogId) => {
-    updatedBlog.user = user.id;
-    blogService.update(updatedBlog, blogId).then((data) => {
-      setBlogs(
-        blogs.map((otherBlog) => (otherBlog.id !== blogId ? otherBlog : data))
-      );
-    });
+    dispatch(logoutUser());
   };
 
   const handleSortAsc = () => {
@@ -114,13 +90,7 @@ const App = () => {
         <button onClick={handleSortDesc}>sort by likes high to low</button>
         <br />
         {storeBlogs.map((blog) => (
-          <Blog
-            updateLike={handleLike}
-            key={blog.id}
-            blog={blog}
-            blogs={blogs}
-            setBlogs={setBlogs}
-          />
+          <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} />
         ))}
       </>
     );
