@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { likeBlog, removeBlog } from "../reducers/blogReducer";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { initializeBlogs, likeBlog, removeBlog } from "../reducers/blogReducer";
 
-const Blog = ({ blog }) => {
+export const Blog = ({ blog }) => {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
 
@@ -60,4 +60,34 @@ const Blog = ({ blog }) => {
   );
 };
 
-export default Blog;
+const BlogList = () => {
+  const blogs = useSelector((state) => state.blogs);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(initializeBlogs());
+  }, [dispatch]);
+
+  const handleSortAsc = () => {
+    const tempBlogArr = [...blogs];
+    tempBlogArr.sort((a, b) => a.likes - b.likes);
+  };
+  const handleSortDesc = () => {
+    const tempBlogArr = [...blogs];
+    tempBlogArr.sort((a, b) => b.likes - a.likes);
+  };
+
+  return (
+    <>
+      <br />
+      <button onClick={handleSortAsc}>sort by likes low to high</button>
+      <button onClick={handleSortDesc}>sort by likes high to low</button>
+      <br />
+      {blogs.map((blog) => (
+        <Blog key={blog.id} blog={blog} />
+      ))}
+    </>
+  );
+};
+
+export default BlogList;

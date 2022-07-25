@@ -1,7 +1,7 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { fireEvent, render } from "@testing-library/react";
-import Blog from "./Blog";
+import { Blog } from "./BlogList";
 
 test("renders only title and author by default", () => {
   const blog = {

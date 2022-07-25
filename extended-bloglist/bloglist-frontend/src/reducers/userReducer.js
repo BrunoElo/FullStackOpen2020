@@ -7,7 +7,6 @@ const userSlice = createSlice({
   initialState: null,
   reducers: {
     setUser(state, action) {
-      console.log(action.payload);
       return action.payload;
     },
   },
@@ -19,7 +18,7 @@ export const loginUser = (userData) => {
   return async (dispatch) => {
     try {
       const response = await blogService.login(userData);
-      console.log(response);
+      window.localStorage.setItem("userDetails", JSON.stringify(response));
       blogService.setToken(response.token);
       dispatch(setUser(response));
       dispatch(createNotification("Login successful", 5));
@@ -34,6 +33,17 @@ export const logoutUser = () => {
     blogService.logout();
     dispatch(setUser(null));
     dispatch(createNotification("Successfully logged out", 5));
+  };
+};
+
+export const persistUser = () => {
+  return (dispatch) => {
+    const loggedInUser = window.localStorage.getItem("userDetails");
+    if (loggedInUser) {
+      const user = JSON.parse(loggedInUser);
+      dispatch(setUser(user));
+      blogService.setToken(user.token);
+    }
   };
 };
 

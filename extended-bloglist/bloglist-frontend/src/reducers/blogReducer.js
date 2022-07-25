@@ -7,11 +7,9 @@ const blogSlice = createSlice({
   initialState: [],
   reducers: {
     setBlogs(state, action) {
-      console.log(current(state), action);
       return action.payload;
     },
     newBlog(state, action) {
-      console.log(current(state), action);
       return [...state, action.payload];
     },
     updateBlog(state, action) {
@@ -59,7 +57,6 @@ export const likeBlog = (blog) => {
   };
   return async (dispatch) => {
     const response = await blogService.update(likedBlog, blog.id);
-    console.log(response);
     dispatch(updateBlog(response));
   };
 };

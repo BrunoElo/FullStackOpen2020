@@ -1,14 +1,17 @@
 import PropTypes from "prop-types";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createBlog } from "../reducers/blogReducer";
 
-const NewBlogForm = ({ createBlog }) => {
+const NewBlogForm = () => {
+  const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
 
   const handleAddBlog = (event) => {
     event.preventDefault();
-    createBlog({ title, author, url });
+    dispatch(createBlog({ title, author, url }));
     setTitle("");
     setAuthor("");
     setUrl("");
