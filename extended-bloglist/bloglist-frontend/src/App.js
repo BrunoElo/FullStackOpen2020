@@ -6,11 +6,12 @@ import NewBlogForm from "./components/NewBlogForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import { logoutUser, persistUser } from "./reducers/userReducer";
+import { Route, Routes } from "react-router-dom";
+import Users from "./components/Users";
 
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const blogFormRef = useRef();
 
   useEffect(() => {
     dispatch(persistUser());
@@ -36,17 +37,31 @@ const App = () => {
         <button id="logout-button" onClick={handleLogout}>
           Logout
         </button>
-        <Togglable
-          ref={blogFormRef}
-          buttonLabel1="new note"
-          buttonLabel2="cancel"
-        >
-          <NewBlogForm />
-        </Togglable>
-        <BlogList />
+
+        <Routes>
+          <Route path="/users" element={<Users />} />
+          <Route path="/" element={<Home />} />
+        </Routes>
       </>
     );
   }
+};
+
+const Home = () => {
+  const blogFormRef = useRef();
+
+  return (
+    <>
+      <Togglable
+        ref={blogFormRef}
+        buttonLabel1="new note"
+        buttonLabel2="cancel"
+      >
+        <NewBlogForm />
+      </Togglable>
+      <BlogList />
+    </>
+  );
 };
 
 export default App;

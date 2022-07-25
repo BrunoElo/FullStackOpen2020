@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createBlog } from "../reducers/blogReducer";
@@ -51,10 +50,6 @@ const NewBlogForm = () => {
       </form>
     </>
   );
-};
-
-NewBlogForm.propTypes = {
-  createBlog: PropTypes.func.isRequired,
 };
 
 export default NewBlogForm;
