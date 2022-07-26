@@ -6,7 +6,7 @@ import NewBlogForm from "./components/NewBlogForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import { logoutUser, persistUser } from "./reducers/userReducer";
-import { Route, Routes, useMatch } from "react-router-dom";
+import { Link, Route, Routes, useMatch } from "react-router-dom";
 import Users from "./components/Users";
 import User from "./components/User";
 import BlogView from "./components/BlogView";
@@ -29,10 +29,6 @@ const App = () => {
     dispatch(persistUser());
   }, []);
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
-  };
-
   if (user === null) {
     return (
       <>
@@ -44,11 +40,8 @@ const App = () => {
     return (
       <>
         <Notification />
-        <h2>blogs</h2>
-        <span>{user.username} is logged in.</span>
-        <button id="logout-button" onClick={handleLogout}>
-          Logout
-        </button>
+        <Menu user={user} />
+        <h2>blog app</h2>
 
         <Routes>
           <Route path="/blogs/:id" element={<BlogView blog={blog} />} />
@@ -59,6 +52,26 @@ const App = () => {
       </>
     );
   }
+};
+
+const Menu = ({ user }) => {
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
+
+  return (
+    <>
+      <Link to="/">blogs</Link>
+      {"  "}
+      <Link to="/users">users</Link>
+      {"  "}
+      <span>{user.username} is logged in.</span>
+      <button id="logout-button" onClick={handleLogout}>
+        Logout
+      </button>
+    </>
+  );
 };
 
 const Home = () => {

@@ -1,4 +1,4 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { blogService } from "../services/blogs";
 import { createNotification } from "./notificationReducer";
 
@@ -62,21 +62,21 @@ export const likeBlog = (blog) => {
 };
 
 export const removeBlog = (id) => {
-  try {
-    return async (dispatch) => {
+  return async (dispatch) => {
+    try {
       await blogService.remove(id);
       dispatch(deleteBlog(id));
       dispatch(createNotification("Blog post deleted successfully", 5));
-    };
-  } catch (err) {
-    dispatch(
-      createNotification(
-        "Error!, can't delete a blog you didn't create",
-        5,
-        "error"
-      )
-    );
-  }
+    } catch (err) {
+      dispatch(
+        createNotification(
+          "Error!, can't delete a blog you didn't create",
+          5,
+          "error"
+        )
+      );
+    }
+  };
 };
 
 export default blogSlice.reducer;
