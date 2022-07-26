@@ -1,17 +1,23 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
+const Comment = require("../models/comment");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const middleware = require("../utils/middleware");
+const { response } = require("../app");
 
 // Get all blog items
 blogsRouter.get("/", async (request, response, next) => {
   try {
-    const blogs = await Blog.find({}).populate("user", {
-      username: 1,
-      name: 1,
-      id: 1,
-    });
+    const blogs = await Blog.find({})
+      .populate("user", {
+        username: 1,
+        name: 1,
+        id: 1,
+      })
+      .populate("comments", {
+        comment: 1,
+      });
     response.json(blogs);
   } catch (exception) {
     next(exception);
@@ -99,6 +105,29 @@ blogsRouter.put("/:id", async (request, response, next) => {
       id: 1,
     });
     response.json(updatedBlog);
+  } catch (exception) {
+    next(exception);
+  }
+});
+
+// Comment on blogs
+blogsRouter.post("/:id/comments", async (request, response, next) => {
+  const body = request.body;
+  const blogId = request.params.id;
+  try {
+    const blog = await Blog.findById(blogId);
+
+    const comment = new Comment({
+      comment: body.comment,
+      blogId,
+    });
+    const savedComment = await comment.save();
+    blog.comments = blog.comments.concat(savedComment._id);
+    await blog.save(function (err, blog) {
+      blog.populate("comments", { comment: 1 }, function (err, blog) {
+        response.status(201).json(blog);
+      });
+    });
   } catch (exception) {
     next(exception);
   }

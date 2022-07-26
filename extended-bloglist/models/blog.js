@@ -6,6 +6,7 @@ const blogSchema = new mongoose.Schema({
   url: String,
   likes: { type: Number, default: 0 },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
 });
 
 // transforms the default _id property(from mongodb) to id and assigns the corresponding value
