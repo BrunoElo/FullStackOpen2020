@@ -79,4 +79,23 @@ export const removeBlog = (id) => {
   };
 };
 
+export const commentOnBlog = (comment, id) => {
+  return async (dispatch) => {
+    try {
+      const response = await blogService.commentOnBlog(comment, id);
+      dispatch(updateBlog(response));
+      dispatch(
+        createNotification(
+          `Comment ${comment.comment} was added successfully`,
+          5
+        )
+      );
+    } catch (err) {
+      dispatch(
+        createNotification("Failed to add comment to blog post", 5, "error")
+      );
+    }
+  };
+};
+
 export default blogSlice.reducer;
