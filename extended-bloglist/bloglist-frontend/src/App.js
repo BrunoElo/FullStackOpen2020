@@ -10,6 +10,7 @@ import { Link, Route, Routes, useMatch } from "react-router-dom";
 import Users from "./components/Users";
 import User from "./components/User";
 import BlogView from "./components/BlogView";
+import { AppBar, Button, Container, IconButton, Toolbar } from "@mui/material";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,14 +32,14 @@ const App = () => {
 
   if (user === null) {
     return (
-      <>
+      <Container>
         <Notification />
         <LoginForm />
-      </>
+      </Container>
     );
   } else {
     return (
-      <>
+      <Container>
         <Notification />
         <Menu user={user} />
         <h2>blog app</h2>
@@ -49,7 +50,7 @@ const App = () => {
           <Route path="/users" element={<Users />} />
           <Route path="/" element={<Home />} />
         </Routes>
-      </>
+      </Container>
     );
   }
 };
@@ -62,14 +63,34 @@ const Menu = ({ user }) => {
 
   return (
     <>
-      <Link to="/">blogs</Link>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+          ></IconButton>
+          <Button color="inherit" LinkComponent={Link} to="/">
+            blogs
+          </Button>
+          <Button color="inherit" LinkComponent={Link} to="/users">
+            users
+          </Button>
+          <span>{user.username} is logged in.</span>
+
+          <Button color="inherit" id="logout-button" onClick={handleLogout}>
+            logout
+          </Button>
+        </Toolbar>
+      </AppBar>
+      {/* <Link to="/">blogs</Link>
       {"  "}
       <Link to="/users">users</Link>
       {"  "}
       <span>{user.username} is logged in.</span>
       <button id="logout-button" onClick={handleLogout}>
         Logout
-      </button>
+      </button> */}
     </>
   );
 };

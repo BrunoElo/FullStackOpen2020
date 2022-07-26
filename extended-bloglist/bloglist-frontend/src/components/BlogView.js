@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { commentOnBlog, likeBlog } from "../reducers/blogReducer";
@@ -49,7 +50,7 @@ const CommentSection = ({ blog }) => {
       <h3>comments</h3>
       <form onSubmit={commentOnBlogPost}>
         <input value={comment} onChange={(e) => setComment(e.target.value)} />
-        <button type="submit">add comment</button>
+        <Button type="submit">add comment</Button>
       </form>
       <ul>
         {blog.comments
