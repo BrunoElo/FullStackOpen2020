@@ -43,6 +43,13 @@ Working repository for the FullStackOpen course for cohort 2020 by etki_JS
 - [unicafe-redux](https://github.com/BrunoElo/FullStackOpen2020/tree/part6/unicafe-redux)
 - [redux-anecdotes](https://github.com/BrunoElo/FullStackOpen2020/tree/part6/redux-anecdotes)
 
+[Part7](https://github.com/BrunoElo/FullStackOpen2020/tree/part7)
+
+- [routed-anecdotes](https://github.com/BrunoElo/FullStackOpen2020/tree/part7/routed-anecdotes)
+- [country-hook](https://github.com/BrunoElo/FullStackOpen2020/tree/part7/country-hook)
+- [ultimate-hooks](https://github.com/BrunoElo/FullStackOpen2020/tree/part7/ultimate-hooks)
+- [extended-bloglist](https://github.com/BrunoElo/FullStackOpen2020/tree/part7/extended-bloglist)
+
 Useful Reading
 
 - [React Official Documentation](https://reactjs.org/docs/hello-world.html)
