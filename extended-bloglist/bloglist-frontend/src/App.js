@@ -6,12 +6,18 @@ import NewBlogForm from "./components/NewBlogForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import { logoutUser, persistUser } from "./reducers/userReducer";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useMatch } from "react-router-dom";
 import Users from "./components/Users";
+import User from "./components/User";
 
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const users = useSelector((state) => state.users);
+  const match = useMatch("/users/:id");
+  const individualUser = match
+    ? users.find((user) => user.id === match.params.id)
+    : null;
 
   useEffect(() => {
     dispatch(persistUser());
@@ -39,6 +45,7 @@ const App = () => {
         </button>
 
         <Routes>
+          <Route path="/users/:id" element={<User user={individualUser} />} />
           <Route path="/users" element={<Users />} />
           <Route path="/" element={<Home />} />
         </Routes>

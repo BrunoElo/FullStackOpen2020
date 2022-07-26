@@ -1,25 +1,16 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { initializeBlogs } from "../reducers/blogReducer";
+import { Link } from "react-router-dom";
+import { initializeUsers } from "../reducers/usersReducer";
 
 const Users = () => {
   const dispatch = useDispatch();
-  const blogs = useSelector((state) => state.blogs);
-  const authors = blogs.map((blog) => blog.author);
-  const authorObj = {};
-  for (let author of authors) {
-    if (authorObj[author] >= 0) {
-      authorObj[author] += 1;
-    } else {
-      authorObj[author] = 1;
-    }
-  }
-  //   const authorsSet = newSet(authors);
+  const users = useSelector((state) => state.users);
+
   useEffect(() => {
-    dispatch(initializeBlogs());
+    dispatch(initializeUsers());
   }, [dispatch]);
 
-  console.log(authors, authorObj);
   return (
     <>
       <h2>User</h2>
@@ -31,10 +22,12 @@ const Users = () => {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(authorObj).map((author, index) => (
-            <tr key={index}>
-              <td>{author[0]}</td>
-              <td>{author[1]}</td>
+          {users.map((user) => (
+            <tr key={user.id}>
+              <td>
+                <Link to={`/users/${user.id}`}>{user.name}</Link>
+              </td>
+              <td>{user.blogs.length}</td>
             </tr>
           ))}
         </tbody>
