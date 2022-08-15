@@ -1,0 +1,5 @@
+title 0.6: New note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+browser-->server: request body: {content: "exercise", date: "2021-01-17T02:57:24.786Z"}
+server-->browser: response: {"message":"note created"}
