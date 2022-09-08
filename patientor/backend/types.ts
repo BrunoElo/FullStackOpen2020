@@ -14,3 +14,5 @@ export type Patient = {
 };
 
 export type NoPatientSsn = Omit<Patient, "ssn">;
+
+export type NewPatient = Omit<Patient, "id">;
