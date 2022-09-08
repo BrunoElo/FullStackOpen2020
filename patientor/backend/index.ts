@@ -2,6 +2,7 @@ import express = require("express");
 import cors from "cors";
 import diagnoseService from "./services/diagnoseService";
 import patientService from "./services/patientService";
+import toNewPatientEntry from "./utils";
 
 const router = express.Router();
 const app = express();
@@ -12,7 +13,7 @@ app.use(cors());
 app.use("/api", router);
 
 router.get("/ping", (_req, res) => {
-  res.json("hey");
+  res.json("pong");
 });
 
 router.get("/diagnoses", (_req, res) => {
@@ -24,7 +25,7 @@ router.get("/patients", (_req, res) => {
 });
 
 router.post("/patients", (req, res) => {
-  const newPatient = req.body;
+  const newPatient = toNewPatientEntry(req.body);
 
   res.status(201).json(patientService.addPatient(newPatient));
 });
