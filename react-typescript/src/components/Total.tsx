@@ -1,7 +1,6 @@
-import React from "react";
-import { CourseParts } from "../App";
+import { CoursePart } from "../types";
 
-const Total = ({ courseParts }: { courseParts: CourseParts[] }) => {
+const Total = ({ courseParts }: { courseParts: CoursePart[] }) => {
   return (
     <p>
       Number of exercises{" "}
