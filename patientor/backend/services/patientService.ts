@@ -9,12 +9,13 @@ const getPatients = (): Patient[] => {
 };
 
 const getPatientsWithoutSsn = (): NoPatientSsn[] => {
-  return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
+  return patients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
     id,
     name,
     dateOfBirth,
     gender,
     occupation,
+    entries
   }));
 };
 
