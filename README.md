@@ -50,6 +50,13 @@ Working repository for the FullStackOpen course for cohort 2020 by etki_JS
 - [ultimate-hooks](https://github.com/BrunoElo/FullStackOpen2020/tree/part7/ultimate-hooks)
 - [extended-bloglist](https://github.com/BrunoElo/FullStackOpen2020/tree/part7/extended-bloglist)
 
+[Part9](https://github.com/BrunoElo/FullStackOpen2020/tree/part9)
+
+- [part9 preliminary exercises](https://github.com/BrunoElo/FullStackOpen2020/tree/part9/part9)
+- [react-typescript](https://github.com/BrunoElo/FullStackOpen2020/tree/part9/react-typescript)
+- [flight-diary](https://github.com/BrunoElo/FullStackOpen2020/tree/part9/flight-diary)
+- [patientor](https://github.com/BrunoElo/FullStackOpen2020/tree/part9/patientor)
+
 Useful Reading
 
 - [React Official Documentation](https://reactjs.org/docs/hello-world.html)
