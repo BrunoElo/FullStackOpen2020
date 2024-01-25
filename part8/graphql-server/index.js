@@ -1,5 +1,6 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const { randomUUID } = require('crypto')
 
 let authors = [
     {
@@ -98,14 +99,15 @@ let books = [
 */
 
 const typeDefs = `
-  type Books {
+  type Book {
     title: String! 
     author: String! 
     published: Int! 
     genres: [String!]!
+    id: ID!
   }
   
-  type Authors {
+  type Author {
     name: String!
     id: String!
     born: Int,
@@ -115,8 +117,17 @@ const typeDefs = `
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String, genre: String): [Books!]!
-    allAuthors: [Authors!]!
+    allBooks(author: String, genre: String): [Book!]!
+    allAuthors: [Author!]!
+  }
+  
+  type Mutation {
+    addBook(
+        title: String!
+        author: String!
+        published: Int!
+        genres: [String!]!
+        ): Book
   }
 `
 
@@ -139,8 +150,24 @@ const resolvers = {
         },
         allAuthors: () => authors
     },
-    Authors: {
+    Author: {
         bookCount: (root) =>  books.filter(book => book.author === root.name).length
+    },
+    Mutation: {
+        addBook: (root, args) => {
+            const book = {...args, id: randomUUID}
+            books = books.concat(book)
+
+            // Add new author to server
+            if (!(authors.find(author => author.name === args.author))) {
+                authors = authors.concat({
+                    name: args.author,
+                    id: randomUUID,
+                    born: null
+                })
+            }
+            return book
+        }
     }
 }
 
