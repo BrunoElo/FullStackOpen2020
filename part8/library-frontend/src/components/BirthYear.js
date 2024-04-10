@@ -35,7 +35,7 @@ function BirthYear({authors}) {
                     value={name}
                     onChange={({target}) => setName(target.value)}
                 >
-                    <option selected>Select author</option>
+                    <option>Select author</option>
                     {authors.map(author => <option key={author.name} value={author.name}>{author.name}</option>)}
                 </select>
             </div>
