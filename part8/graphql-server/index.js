@@ -23,6 +23,8 @@ mongoose.connect(config.MONGODB_URI).then(() => {
     console.log('error connection to MONGODB', error.message)
 })
 
+mongoose.set('debug', true);
+
 const start = async () => {
     const app = express();
     const httpServer = http.createServer(app)

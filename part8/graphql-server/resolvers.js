@@ -24,11 +24,11 @@ const resolvers = {
             }
             return Book.find({})
         },
-        allAuthors: async () => Author.find({}),
+        allAuthors: async () => Author.find({}).populate('bookCount'),
         me: (root, args, context) => context.currentUser
     },
     Author: {
-        bookCount: async (root) => await Book.find({author: root._id}).countDocuments()
+        bookCount: (root) => root.bookCount.length
     },
     Book: {
         author: async (root) => await Author.findById(root.author)
@@ -46,19 +46,21 @@ const resolvers = {
             let author = await Author.findOne({name: args.author})
             if (!author) {
                 author = new Author({name: args.author, born: null})
-                try {
-                    await author.save()
-                } catch (error) {
-                    throw new GraphQLError('Author name too short', {
-                        extensions: {
-                            code: 'BAD_USER_INPUT',
-                            invalidArgs: args.author,
-                            error
-                        }
-                    })
-                }
+
             }
             const book = new Book({...args, author: author._id}) // update book with author id
+            author.bookCount.push(book._id)
+            try {
+                await author.save()
+            } catch (error) {
+                throw new GraphQLError('Author name too short', {
+                    extensions: {
+                        code: 'BAD_USER_INPUT',
+                        invalidArgs: args.author,
+                        error
+                    }
+                })
+            }
             try {
                 await book.save()
             } catch (error) {
