@@ -1,23 +1,7 @@
 import { useState } from 'react'
 import {gql, useMutation} from "@apollo/client";
-import {ALL_AUTHORS, ALL_BOOKS} from "../queries";
-
-const ADD_NEW_BOOK = gql`
-mutation addNewBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
-  addBook(title: $title, author: $author, published: $published, genres: $genres) {
-    title
-    author {
-      name
-      born
-      id
-      bookCount
-    }
-    published
-    genres
-    id
-  }
-}
-`
+import {ADD_NEW_BOOK, ALL_AUTHORS, ALL_BOOKS} from "../queries";
+import {updateCache} from "../App";
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
@@ -29,11 +13,7 @@ const NewBook = (props) => {
   const [addNewBook] = useMutation(ADD_NEW_BOOK, {
     refetchQueries: [{query: ALL_AUTHORS}, {query: ALL_BOOKS}],
     update: (cache,{data}) => {
-      cache.updateQuery({query: ALL_BOOKS, variables: {genre: null}}, ({allBooks}) => {
-        return {
-          allBooks: allBooks.concat(data.addBook)
-        }
-      })
+      updateCache(cache, {query: ALL_BOOKS, variables: {genre: null}}, data.addBook)
     }
   })
 
