@@ -50,6 +50,11 @@ Working repository for the FullStackOpen course for cohort 2020 by etki_JS
 - [ultimate-hooks](https://github.com/BrunoElo/FullStackOpen2020/tree/part7/ultimate-hooks)
 - [extended-bloglist](https://github.com/BrunoElo/FullStackOpen2020/tree/part7/extended-bloglist)
 
+[Part8](https://github.com/BrunoElo/FullStackOpen2020/tree/part8)
+
+- [graphql-backend](https://github.com/BrunoElo/FullStackOpen2020/tree/part8/graphql-server)
+- [graphql-frontend](https://github.com/BrunoElo/FullStackOpen2020/tree/part8/library-frontend)
+
 [Part9](https://github.com/BrunoElo/FullStackOpen2020/tree/part9)
 
 - [part9 preliminary exercises](https://github.com/BrunoElo/FullStackOpen2020/tree/part9/part9)
