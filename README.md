@@ -62,6 +62,11 @@ Working repository for the FullStackOpen course for cohort 2020 by etki_JS
 - [flight-diary](https://github.com/BrunoElo/FullStackOpen2020/tree/part9/flight-diary)
 - [patientor](https://github.com/BrunoElo/FullStackOpen2020/tree/part9/patientor)
 
+[Part11](part11)
+
+- [FSO Pokedex](https://github.com/emekaelo/full-stack-open-pokedex)
+- [Phonebook with ci/cd pipeline](https://github.com/emekaelo/phonebook)
+
 Useful Reading
 
 - [React Official Documentation](https://reactjs.org/docs/hello-world.html)
