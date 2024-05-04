@@ -62,6 +62,10 @@ Working repository for the FullStackOpen course for cohort 2020 by etki_JS
 - [flight-diary](https://github.com/BrunoElo/FullStackOpen2020/tree/part9/flight-diary)
 - [patientor](https://github.com/BrunoElo/FullStackOpen2020/tree/part9/patientor)
 
+[Part10](part10)
+
+- [Rate repository app](https://github.com/emekaelo/rate-repository-app)
+
 [Part11](part11)
 
 - [FSO Pokedex](https://github.com/emekaelo/full-stack-open-pokedex)
